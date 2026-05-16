@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>USD Balance</title>
+<script src="https://cdn.jsdelivr.net/gh/tableau/extensions-api/lib/tableau.extensions.1.latest.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f6f9;--card:#fff;--bdr:#e2e8f0;--surf:#f1f5f9;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;--t4:#cbd5e1;
+  --up:#16a34a;--up-bg:#dcfce7;
+  --dn:#dc2626;--dn-bg:#fee2e2;
+  --neu:#64748b;--neu-bg:#f1f5f9;
+  /* USD blue accent */
+  --usd:#1a56db;--usd-bg:#eff6ff;--usd-bdr:#bfdbfe;
+}
+html,body{
+  width:100%;height:100%;
+  background:var(--bg);
+  font-family:'Inter',-apple-system,sans-serif;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+#app{width:calc(100% - 14px);max-width:260px;}
+
+/* ── CARD ── */
+#card{
+  background:var(--card);
+  border-radius:14px;
+  border:0.5px solid var(--bdr);
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 1px 2px rgba(15,23,42,.04),
+    0 4px 12px rgba(15,23,42,.07),
+    0 14px 36px rgba(15,23,42,.05);
+}
+
+/* top accent stripe — USD blue */
+#stripe{height:3px;width:100%;background:var(--usd);}
+
+/* card body — half padding of full card */
+.body{padding:9px 13px 9px;}
+
+/* ── HEADER ROW: flag + label left, delta chip right ── */
+.hdr{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  gap:8px;margin-bottom:7px;
+}
+.hdr-left{display:flex;align-items:center;gap:7px;}
+
+/* USD flag badge */
+.flag-badge{
+  display:flex;align-items:center;gap:5px;
+  background:var(--usd-bg);
+  border:0.5px solid var(--usd-bdr);
+  border-radius:6px;
+  padding:3px 7px 3px 4px;
+  flex-shrink:0;
+}
+/* US Flag SVG inline — red/white stripes + blue canton */
+.flag-icon{
+  width:18px;height:12px;
+  border-radius:2px;
+  overflow:hidden;
+  flex-shrink:0;
+  display:block;
+}
+.flag-label{
+  font-size:9px;font-weight:700;
+  letter-spacing:.06em;color:var(--usd);
+}
+
+/* card label */
+#lbl{
+  font-size:9px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+
+/* delta chip right side of header */
+#dchip{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-weight:600;
+  padding:3px 8px;border-radius:6px;
+  white-space:nowrap;flex-shrink:0;
+  background:var(--neu-bg);color:var(--neu);
+  font-variant-numeric:tabular-nums;
+}
+#dchip svg{flex-shrink:0;}
+
+/* ── HERO ROW ── */
+.hero{
+  display:flex;align-items:baseline;
+  justify-content:space-between;
+  gap:6px;
+}
+.hero-left{display:flex;align-items:baseline;gap:5px;}
+#hnum{
+  font-size:28px;font-weight:700;color:var(--t1);
+  letter-spacing:-0.03em;line-height:1;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.hunit{font-size:11px;font-weight:400;color:var(--t4);letter-spacing:.04em;}
+#vs-lbl{font-size:9px;color:var(--t4);align-self:flex-end;padding-bottom:1px;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="card">
+    <div id="stripe"></div>
+    <div class="body">
+
+      <!-- header: flag badge + label | delta chip -->
+      <div class="hdr">
+        <div class="hdr-left">
+          <!-- US Flag inline SVG -->
+          <div class="flag-badge">
+            <svg class="flag-icon" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg">
+              <!-- 13 stripes -->
+              <rect width="18" height="12" fill="#B22234"/>
+              <rect y="0.92"  width="18" height="0.92" fill="#fff"/>
+              <rect y="1.85"  width="18" height="0.92" fill="#B22234"/>
+              <rect y="2.77"  width="18" height="0.92" fill="#fff"/>
+              <rect y="3.69"  width="18" height="0.92" fill="#B22234"/>
+              <rect y="4.62"  width="18" height="0.92" fill="#fff"/>
+              <rect y="5.54"  width="18" height="0.92" fill="#B22234"/>
+              <rect y="6.46"  width="18" height="0.92" fill="#fff"/>
+              <rect y="7.38"  width="18" height="0.92" fill="#B22234"/>
+              <rect y="8.31"  width="18" height="0.92" fill="#fff"/>
+              <rect y="9.23"  width="18" height="0.92" fill="#B22234"/>
+              <rect y="10.15" width="18" height="0.92" fill="#fff"/>
+              <!-- blue canton -->
+              <rect width="7.2" height="6.46" fill="#3C3B6E"/>
+              <!-- 9 simplified white stars (3x3 grid) -->
+              <g fill="#fff">
+                <circle cx="1.2" cy="1.08" r="0.45"/>
+                <circle cx="2.4" cy="1.08" r="0.45"/>
+                <circle cx="3.6" cy="1.08" r="0.45"/>
+                <circle cx="4.8" cy="1.08" r="0.45"/>
+                <circle cx="6.0" cy="1.08" r="0.45"/>
+                <circle cx="1.2" cy="2.15" r="0.45"/>
+                <circle cx="2.4" cy="2.15" r="0.45"/>
+                <circle cx="3.6" cy="2.15" r="0.45"/>
+                <circle cx="4.8" cy="2.15" r="0.45"/>
+                <circle cx="6.0" cy="2.15" r="0.45"/>
+                <circle cx="1.8" cy="3.23" r="0.45"/>
+                <circle cx="3.0" cy="3.23" r="0.45"/>
+                <circle cx="4.2" cy="3.23" r="0.45"/>
+                <circle cx="5.4" cy="3.23" r="0.45"/>
+                <circle cx="1.2" cy="4.31" r="0.45"/>
+                <circle cx="2.4" cy="4.31" r="0.45"/>
+                <circle cx="3.6" cy="4.31" r="0.45"/>
+                <circle cx="4.8" cy="4.31" r="0.45"/>
+                <circle cx="6.0" cy="4.31" r="0.45"/>
+                <circle cx="1.8" cy="5.38" r="0.45"/>
+                <circle cx="3.0" cy="5.38" r="0.45"/>
+                <circle cx="4.2" cy="5.38" r="0.45"/>
+                <circle cx="5.4" cy="5.38" r="0.45"/>
+              </g>
+            </svg>
+            <span class="flag-label">USD</span>
+          </div>
+          <span id="lbl">Loading…</span>
+        </div>
+        <!-- delta chip -->
+        <div id="dchip">
+          <svg id="dsvg" width="9" height="9" viewBox="0 0 9 9" fill="none"></svg>
+          <span id="dtxt">—</span>
+        </div>
+      </div>
+
+      <!-- hero: big number + vs yesterday right-aligned -->
+      <div class="hero">
+        <div class="hero-left">
+          <span id="hnum">—</span>
+          <span class="hunit">Bn</span>
+        </div>
+        <span id="vs-lbl">vs yesterday</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+(function(){
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ── number helpers — identical to working Treasury KPI ── */
+  function toBn(n){
+    if(n===null||isNaN(n)) return '—';
+    var abs=Math.abs(n), s=n<0?'-':'';
+    return s+(abs>=1e6?abs/1e9:abs).toFixed(2);
+  }
+  function signBn(n){
+    if(n===null||isNaN(n)) return null;
+    var abs=Math.abs(n), s=n>=0?'+':'-';
+    return s+(abs>=1e6?abs/1e9:abs).toFixed(2);
+  }
+  function pctOf(d,a){
+    if(!a||!d||a===0) return null;
+    var aBn=Math.abs(a)>=1e6?a/1e9:a;
+    var dBn=Math.abs(d)>=1e6?d/1e9:d;
+    var prev=aBn-dBn;
+    if(Math.abs(prev)<0.0001) return null;
+    return (dBn/Math.abs(prev))*100;
+  }
+  function pretty(name){
+    return name
+      .replace(/^(SUM|AVG|MIN|MAX|COUNT|ATTR)\((.+)\)$/i,'$2')
+      .replace(/[_-]/g,' ')
+      .replace(/\b\w/g,function(c){return c.toUpperCase();})
+      .trim();
+  }
+
+  /* ── count-up animation ── */
+  function countUp(target){
+    var el=$('hnum');
+    var abs=Math.abs(target);
+    var end=abs>=1e6?abs/1e9:abs;
+    var sign=target<0?'-':'';
+    var duration=800, steps=50, step=0;
+    var startTxt=el.textContent.replace(/[^0-9.]/g,'');
+    var start=parseFloat(startTxt)||0;
+    if(start===end){el.textContent=sign+end.toFixed(2);return;}
+    clearInterval(el._timer);
+    el._timer=setInterval(function(){
+      step++;
+      var t=step/steps;
+      t=1-Math.pow(1-t,3); /* ease out cubic */
+      el.textContent=sign+(start+(end-start)*t).toFixed(2);
+      if(step>=steps){clearInterval(el._timer);el.textContent=sign+end.toFixed(2);}
+    },duration/steps);
+  }
+
+  /* ── theme ── */
+  function applyTheme(dir){
+    var T={
+      up:  {s:'#16a34a',dc:'#dcfce7',dclr:'#15803d',
+            svg:'<polyline points="1,8 4.5,1 8,8" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'},
+      down:{s:'#dc2626',dc:'#fee2e2',dclr:'#b91c1c',
+            svg:'<polyline points="1,1 4.5,8 8,1" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'},
+      neu: {s:'#1a56db',dc:'#eff6ff',dclr:'#1a56db',
+            svg:'<line x1="1" y1="4.5" x2="8" y2="4.5" stroke="#1a56db" stroke-width="1.8" stroke-linecap="round"/>'}
+    }[dir]||{};
+    /* stripe stays USD blue always */
+    $('stripe').style.background = '#1a56db';
+    /* delta chip */
+    var chip=$('dchip');
+    chip.style.background = T.dc;
+    chip.style.color      = T.dclr;
+    $('dsvg').innerHTML   = T.svg;
+  }
+
+  /* ── EXACT getData/getEnc from confirmed working KPI card ── */
+  async function getData(ws){
+    var rows=[], reader=await ws.getSummaryDataReaderAsync(undefined,{ignoreSelection:true});
+    for(var i=0;i<reader.pageCount;i++){
+      var pg=await reader.getPageAsync(i);
+      pg.data.forEach(function(r){
+        var row={};
+        pg.columns.forEach(function(c,idx){row[c.fieldName]=r[idx];});
+        rows.push(row);
+      });
+    }
+    await reader.releaseAsync();
+    return rows;
+  }
+
+  async function getEnc(ws){
+    var spec=await ws.getVisualSpecificationAsync(), map={};
+    if(spec.activeMarksSpecificationIndex<0) return map;
+    var marks=spec.marksSpecifications[spec.activeMarksSpecificationIndex];
+    marks.encodings.forEach(function(e){map[e.id]=e.field;});
+    return map;
+  }
+
+  /* ── render — card always visible, no show/hide ── */
+  function render(data, enc){
+    if(!enc.actual||!data.length) return;
+
+    var row=data[0];
+    function dv(id){return enc[id]?row[enc[id].name]||null:null;}
+    function num(id){
+      var d=dv(id);if(!d) return null;
+      var n=parseFloat(d.nativeValue!==undefined?d.nativeValue:d.value);
+      return isNaN(n)?null:n;
+    }
+
+    var actualN=num('actual');
+    var deltaN =num('delta');
+
+    if(actualN===null) return;
+
+    /* label from field name */
+    $('lbl').textContent = pretty(enc.actual.name);
+
+    /* hero count-up */
+    countUp(actualN);
+
+    /* direction */
+    var dir = deltaN===null?'neu':deltaN>0?'up':deltaN<0?'down':'neu';
+    applyTheme(dir);
+
+    /* delta chip text */
+    if(deltaN!==null){
+      var sb  = signBn(deltaN);
+      var pct = pctOf(deltaN,actualN);
+      $('dtxt').textContent = sb+'Bn'+(pct!==null?' '+(pct>=0?'+':'')+pct.toFixed(2)+'%':'');
+    } else {
+      $('dtxt').textContent = 'No delta';
+      $('dsvg').innerHTML   = '';
+    }
+  }
+
+  /* ── EXACT init pattern from confirmed working KPI card ── */
+  window.onload = tableau.extensions.initializeAsync().then(function(){
+    var ws = tableau.extensions.worksheetContent.worksheet;
+    var update = async function(){
+      var data = await getData(ws);
+      var enc  = await getEnc(ws);
+      render(data, enc);
+    };
+    ws.addEventListener(tableau.TableauEventType.SummaryDataChanged, update);
+    update();
+  });
+
+})();
+</script>
+</body>
+</html>
