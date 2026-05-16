@@ -11,11 +11,9 @@
 :root{
   --bg:#f4f6f9;--card:#fff;--bdr:#e2e8f0;--surf:#f1f5f9;
   --t1:#0f172a;--t2:#475569;--t3:#94a3b8;--t4:#cbd5e1;
-  --up:#16a34a;--up-bg:#dcfce7;
-  --dn:#dc2626;--dn-bg:#fee2e2;
-  --neu:#64748b;--neu-bg:#f1f5f9;
-  /* USD blue accent */
-  --usd:#1a56db;--usd-bg:#eff6ff;--usd-bdr:#bfdbfe;
+  --up:#16a34a;  --up-bg:#dcfce7;  --up-dk:#15803d;
+  --dn:#dc2626;  --dn-bg:#fee2e2;  --dn-dk:#b91c1c;
+  --neu:#1a56db; --neu-bg:#eff6ff; --neu-bdr:#bfdbfe;
 }
 html,body{
   width:100%;height:100%;
@@ -40,30 +38,39 @@ html,body{
     0 14px 36px rgba(15,23,42,.05);
 }
 
-/* top accent stripe — USD blue */
-#stripe{height:3px;width:100%;background:var(--usd);}
-
-/* card body — half padding of full card */
-.body{padding:9px 13px 9px;}
-
-/* ── HEADER ROW: flag + label left, delta chip right ── */
-.hdr{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  gap:8px;margin-bottom:7px;
+/* top accent stripe — colour driven by direction */
+#stripe{
+  height:3px;
+  width:100%;
+  background:var(--neu);
+  transition:background .25s ease;
 }
-.hdr-left{display:flex;align-items:center;gap:7px;}
 
-/* USD flag badge */
+/* ── BODY — single tight padding ── */
+.body{
+  padding:10px 13px 11px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* ── ROW 1: flag badge left | delta chip right ── */
+.top-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+/* flag badge */
 .flag-badge{
-  display:flex;align-items:center;gap:5px;
-  background:var(--usd-bg);
-  border:0.5px solid var(--usd-bdr);
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--neu-bg);
+  border:0.5px solid var(--neu-bdr);
   border-radius:6px;
-  padding:3px 7px 3px 4px;
+  padding:3px 8px 3px 5px;
   flex-shrink:0;
 }
-/* US Flag SVG inline — red/white stripes + blue canton */
 .flag-icon{
   width:18px;height:12px;
   border-radius:2px;
@@ -71,44 +78,46 @@ html,body{
   flex-shrink:0;
   display:block;
 }
-.flag-label{
+.flag-lbl{
   font-size:9px;font-weight:700;
-  letter-spacing:.06em;color:var(--usd);
+  letter-spacing:.06em;
+  color:var(--neu);
 }
 
-/* card label */
-#lbl{
-  font-size:9px;font-weight:600;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:var(--t3);white-space:nowrap;
-  overflow:hidden;text-overflow:ellipsis;
-}
-
-/* delta chip right side of header */
+/* delta chip */
 #dchip{
   display:inline-flex;align-items:center;gap:4px;
   font-size:10px;font-weight:600;
   padding:3px 8px;border-radius:6px;
   white-space:nowrap;flex-shrink:0;
-  background:var(--neu-bg);color:var(--neu);
   font-variant-numeric:tabular-nums;
+  transition:background .25s,color .25s;
+  background:var(--neu-bg);color:var(--neu);
 }
-#dchip svg{flex-shrink:0;}
 
-/* ── HERO ROW ── */
-.hero{
-  display:flex;align-items:baseline;
+/* ── ROW 2: hero number left | "vs yesterday" right ── */
+.hero-row{
+  display:flex;
+  align-items:center;
   justify-content:space-between;
   gap:6px;
 }
-.hero-left{display:flex;align-items:baseline;gap:5px;}
+.hero-left{
+  display:flex;align-items:baseline;gap:4px;
+}
 #hnum{
-  font-size:28px;font-weight:700;color:var(--t1);
+  font-size:30px;font-weight:700;color:var(--t1);
   letter-spacing:-0.03em;line-height:1;
   font-variant-numeric:tabular-nums;white-space:nowrap;
 }
-.hunit{font-size:11px;font-weight:400;color:var(--t4);letter-spacing:.04em;}
-#vs-lbl{font-size:9px;color:var(--t4);align-self:flex-end;padding-bottom:1px;}
+.hunit{
+  font-size:11px;font-weight:400;
+  color:var(--t4);letter-spacing:.04em;
+}
+#vs-lbl{
+  font-size:9px;color:var(--t4);
+  white-space:nowrap;flex-shrink:0;
+}
 </style>
 </head>
 <body>
@@ -117,70 +126,54 @@ html,body{
     <div id="stripe"></div>
     <div class="body">
 
-      <!-- header: flag badge + label | delta chip -->
-      <div class="hdr">
-        <div class="hdr-left">
+      <!-- Row 1: flag + delta chip -->
+      <div class="top-row">
+        <div class="flag-badge">
           <!-- US Flag inline SVG -->
-          <div class="flag-badge">
-            <svg class="flag-icon" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg">
-              <!-- 13 stripes -->
-              <rect width="18" height="12" fill="#B22234"/>
-              <rect y="0.92"  width="18" height="0.92" fill="#fff"/>
-              <rect y="1.85"  width="18" height="0.92" fill="#B22234"/>
-              <rect y="2.77"  width="18" height="0.92" fill="#fff"/>
-              <rect y="3.69"  width="18" height="0.92" fill="#B22234"/>
-              <rect y="4.62"  width="18" height="0.92" fill="#fff"/>
-              <rect y="5.54"  width="18" height="0.92" fill="#B22234"/>
-              <rect y="6.46"  width="18" height="0.92" fill="#fff"/>
-              <rect y="7.38"  width="18" height="0.92" fill="#B22234"/>
-              <rect y="8.31"  width="18" height="0.92" fill="#fff"/>
-              <rect y="9.23"  width="18" height="0.92" fill="#B22234"/>
-              <rect y="10.15" width="18" height="0.92" fill="#fff"/>
-              <!-- blue canton -->
-              <rect width="7.2" height="6.46" fill="#3C3B6E"/>
-              <!-- 9 simplified white stars (3x3 grid) -->
-              <g fill="#fff">
-                <circle cx="1.2" cy="1.08" r="0.45"/>
-                <circle cx="2.4" cy="1.08" r="0.45"/>
-                <circle cx="3.6" cy="1.08" r="0.45"/>
-                <circle cx="4.8" cy="1.08" r="0.45"/>
-                <circle cx="6.0" cy="1.08" r="0.45"/>
-                <circle cx="1.2" cy="2.15" r="0.45"/>
-                <circle cx="2.4" cy="2.15" r="0.45"/>
-                <circle cx="3.6" cy="2.15" r="0.45"/>
-                <circle cx="4.8" cy="2.15" r="0.45"/>
-                <circle cx="6.0" cy="2.15" r="0.45"/>
-                <circle cx="1.8" cy="3.23" r="0.45"/>
-                <circle cx="3.0" cy="3.23" r="0.45"/>
-                <circle cx="4.2" cy="3.23" r="0.45"/>
-                <circle cx="5.4" cy="3.23" r="0.45"/>
-                <circle cx="1.2" cy="4.31" r="0.45"/>
-                <circle cx="2.4" cy="4.31" r="0.45"/>
-                <circle cx="3.6" cy="4.31" r="0.45"/>
-                <circle cx="4.8" cy="4.31" r="0.45"/>
-                <circle cx="6.0" cy="4.31" r="0.45"/>
-                <circle cx="1.8" cy="5.38" r="0.45"/>
-                <circle cx="3.0" cy="5.38" r="0.45"/>
-                <circle cx="4.2" cy="5.38" r="0.45"/>
-                <circle cx="5.4" cy="5.38" r="0.45"/>
-              </g>
-            </svg>
-            <span class="flag-label">USD</span>
-          </div>
-          <span id="lbl">Loading…</span>
+          <svg class="flag-icon" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg">
+            <rect width="18" height="12" fill="#B22234"/>
+            <rect y="0.92"  width="18" height="0.92" fill="#fff"/>
+            <rect y="1.85"  width="18" height="0.92" fill="#B22234"/>
+            <rect y="2.77"  width="18" height="0.92" fill="#fff"/>
+            <rect y="3.69"  width="18" height="0.92" fill="#B22234"/>
+            <rect y="4.62"  width="18" height="0.92" fill="#fff"/>
+            <rect y="5.54"  width="18" height="0.92" fill="#B22234"/>
+            <rect y="6.46"  width="18" height="0.92" fill="#fff"/>
+            <rect y="7.38"  width="18" height="0.92" fill="#B22234"/>
+            <rect y="8.31"  width="18" height="0.92" fill="#fff"/>
+            <rect y="9.23"  width="18" height="0.92" fill="#B22234"/>
+            <rect y="10.15" width="18" height="0.92" fill="#fff"/>
+            <rect width="7.2" height="6.46" fill="#3C3B6E"/>
+            <g fill="#fff">
+              <circle cx="1.2" cy="1.08" r="0.42"/><circle cx="2.4" cy="1.08" r="0.42"/>
+              <circle cx="3.6" cy="1.08" r="0.42"/><circle cx="4.8" cy="1.08" r="0.42"/>
+              <circle cx="6.0" cy="1.08" r="0.42"/>
+              <circle cx="1.2" cy="2.15" r="0.42"/><circle cx="2.4" cy="2.15" r="0.42"/>
+              <circle cx="3.6" cy="2.15" r="0.42"/><circle cx="4.8" cy="2.15" r="0.42"/>
+              <circle cx="6.0" cy="2.15" r="0.42"/>
+              <circle cx="1.8" cy="3.23" r="0.42"/><circle cx="3.0" cy="3.23" r="0.42"/>
+              <circle cx="4.2" cy="3.23" r="0.42"/><circle cx="5.4" cy="3.23" r="0.42"/>
+              <circle cx="1.2" cy="4.31" r="0.42"/><circle cx="2.4" cy="4.31" r="0.42"/>
+              <circle cx="3.6" cy="4.31" r="0.42"/><circle cx="4.8" cy="4.31" r="0.42"/>
+              <circle cx="6.0" cy="4.31" r="0.42"/>
+              <circle cx="1.8" cy="5.38" r="0.42"/><circle cx="3.0" cy="5.38" r="0.42"/>
+              <circle cx="4.2" cy="5.38" r="0.42"/><circle cx="5.4" cy="5.38" r="0.42"/>
+            </g>
+          </svg>
+          <span class="flag-lbl">USD</span>
         </div>
-        <!-- delta chip -->
+
         <div id="dchip">
           <svg id="dsvg" width="9" height="9" viewBox="0 0 9 9" fill="none"></svg>
           <span id="dtxt">—</span>
         </div>
       </div>
 
-      <!-- hero: big number + vs yesterday right-aligned -->
-      <div class="hero">
+      <!-- Row 2: hero number | vs yesterday -->
+      <div class="hero-row">
         <div class="hero-left">
           <span id="hnum">—</span>
-          <span class="hunit">Bn</span>
+          <span class="hunit">Mn</span>
         </div>
         <span id="vs-lbl">vs yesterday</span>
       </div>
@@ -195,73 +188,78 @@ html,body{
 
   var $ = function(id){ return document.getElementById(id); };
 
-  /* ── number helpers — identical to working Treasury KPI ── */
-  function toBn(n){
+  /* ── Mn helpers (divide by 1e6) ── */
+  function toMn(n){
     if(n===null||isNaN(n)) return '—';
     var abs=Math.abs(n), s=n<0?'-':'';
-    return s+(abs>=1e6?abs/1e9:abs).toFixed(2);
+    /* if already small treat as-is, else ÷1e6 */
+    return s+(abs>=1e3?abs/1e6:abs).toFixed(2);
   }
-  function signBn(n){
+  function signMn(n){
     if(n===null||isNaN(n)) return null;
     var abs=Math.abs(n), s=n>=0?'+':'-';
-    return s+(abs>=1e6?abs/1e9:abs).toFixed(2);
+    return s+(abs>=1e3?abs/1e6:abs).toFixed(2);
   }
   function pctOf(d,a){
     if(!a||!d||a===0) return null;
-    var aBn=Math.abs(a)>=1e6?a/1e9:a;
-    var dBn=Math.abs(d)>=1e6?d/1e9:d;
-    var prev=aBn-dBn;
+    /* convert both to Mn then compute */
+    var aMn=Math.abs(a)>=1e3?a/1e6:a;
+    var dMn=Math.abs(d)>=1e3?d/1e6:d;
+    var prev=aMn-dMn;
     if(Math.abs(prev)<0.0001) return null;
-    return (dBn/Math.abs(prev))*100;
-  }
-  function pretty(name){
-    return name
-      .replace(/^(SUM|AVG|MIN|MAX|COUNT|ATTR)\((.+)\)$/i,'$2')
-      .replace(/[_-]/g,' ')
-      .replace(/\b\w/g,function(c){return c.toUpperCase();})
-      .trim();
+    return (dMn/Math.abs(prev))*100;
   }
 
-  /* ── count-up animation ── */
+  /* ── count-up animation (Mn) ── */
   function countUp(target){
     var el=$('hnum');
     var abs=Math.abs(target);
-    var end=abs>=1e6?abs/1e9:abs;
+    var end=abs>=1e3?abs/1e6:abs;
     var sign=target<0?'-':'';
     var duration=800, steps=50, step=0;
-    var startTxt=el.textContent.replace(/[^0-9.]/g,'');
-    var start=parseFloat(startTxt)||0;
+    var start=parseFloat(el.textContent.replace(/[^0-9.]/g,''))||0;
     if(start===end){el.textContent=sign+end.toFixed(2);return;}
     clearInterval(el._timer);
     el._timer=setInterval(function(){
       step++;
-      var t=step/steps;
-      t=1-Math.pow(1-t,3); /* ease out cubic */
+      var t=1-Math.pow(1-step/steps,3);
       el.textContent=sign+(start+(end-start)*t).toFixed(2);
       if(step>=steps){clearInterval(el._timer);el.textContent=sign+end.toFixed(2);}
     },duration/steps);
   }
 
-  /* ── theme ── */
+  /* ── theme — stripe + chip both follow direction ── */
   function applyTheme(dir){
     var T={
-      up:  {s:'#16a34a',dc:'#dcfce7',dclr:'#15803d',
-            svg:'<polyline points="1,8 4.5,1 8,8" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'},
-      down:{s:'#dc2626',dc:'#fee2e2',dclr:'#b91c1c',
-            svg:'<polyline points="1,1 4.5,8 8,1" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'},
-      neu: {s:'#1a56db',dc:'#eff6ff',dclr:'#1a56db',
-            svg:'<line x1="1" y1="4.5" x2="8" y2="4.5" stroke="#1a56db" stroke-width="1.8" stroke-linecap="round"/>'}
+      up:  {
+        stripe:'#16a34a',
+        chipBg:'#dcfce7', chipClr:'#15803d',
+        flagBg:'#eff6ff', flagBdr:'#bfdbfe', flagClr:'#1a56db',
+        svg:'<polyline points="1,8 4.5,1 8,8" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+      },
+      down:{
+        stripe:'#dc2626',
+        chipBg:'#fee2e2', chipClr:'#b91c1c',
+        flagBg:'#eff6ff', flagBdr:'#bfdbfe', flagClr:'#1a56db',
+        svg:'<polyline points="1,1 4.5,8 8,1" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+      },
+      neu: {
+        stripe:'#1a56db',
+        chipBg:'#eff6ff', chipClr:'#1a56db',
+        flagBg:'#eff6ff', flagBdr:'#bfdbfe', flagClr:'#1a56db',
+        svg:'<line x1="1" y1="4.5" x2="8" y2="4.5" stroke="#1a56db" stroke-width="1.8" stroke-linecap="round"/>'
+      }
     }[dir]||{};
-    /* stripe stays USD blue always */
-    $('stripe').style.background = '#1a56db';
-    /* delta chip */
+
+    $('stripe').style.background = T.stripe;
+
     var chip=$('dchip');
-    chip.style.background = T.dc;
-    chip.style.color      = T.dclr;
+    chip.style.background = T.chipBg;
+    chip.style.color      = T.chipClr;
     $('dsvg').innerHTML   = T.svg;
   }
 
-  /* ── EXACT getData/getEnc from confirmed working KPI card ── */
+  /* ── confirmed working data pattern ── */
   async function getData(ws){
     var rows=[], reader=await ws.getSummaryDataReaderAsync(undefined,{ignoreSelection:true});
     for(var i=0;i<reader.pageCount;i++){
@@ -284,7 +282,7 @@ html,body{
     return map;
   }
 
-  /* ── render — card always visible, no show/hide ── */
+  /* ── render ── */
   function render(data, enc){
     if(!enc.actual||!data.length) return;
 
@@ -301,28 +299,25 @@ html,body{
 
     if(actualN===null) return;
 
-    /* label from field name */
-    $('lbl').textContent = pretty(enc.actual.name);
-
-    /* hero count-up */
+    /* hero count-up in Mn */
     countUp(actualN);
 
     /* direction */
-    var dir = deltaN===null?'neu':deltaN>0?'up':deltaN<0?'down':'neu';
+    var dir=deltaN===null?'neu':deltaN>0?'up':deltaN<0?'down':'neu';
     applyTheme(dir);
 
-    /* delta chip text */
+    /* delta chip */
     if(deltaN!==null){
-      var sb  = signBn(deltaN);
+      var sb  = signMn(deltaN);
       var pct = pctOf(deltaN,actualN);
-      $('dtxt').textContent = sb+'Bn'+(pct!==null?' '+(pct>=0?'+':'')+pct.toFixed(2)+'%':'');
+      $('dtxt').textContent = sb+' Mn'+(pct!==null?'  '+(pct>=0?'+':'')+pct.toFixed(2)+'%':'');
     } else {
       $('dtxt').textContent = 'No delta';
       $('dsvg').innerHTML   = '';
     }
   }
 
-  /* ── EXACT init pattern from confirmed working KPI card ── */
+  /* ── confirmed working init pattern ── */
   window.onload = tableau.extensions.initializeAsync().then(function(){
     var ws = tableau.extensions.worksheetContent.worksheet;
     var update = async function(){
