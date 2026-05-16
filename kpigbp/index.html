@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>USD Balance</title>
+<title>GBP Balance</title>
 <script src="https://cdn.jsdelivr.net/gh/tableau/extensions-api/lib/tableau.extensions.1.latest.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -13,7 +13,8 @@
   --t1:#0f172a;--t2:#475569;--t3:#94a3b8;--t4:#cbd5e1;
   --up:#16a34a;  --up-bg:#dcfce7;  --up-dk:#15803d;
   --dn:#dc2626;  --dn-bg:#fee2e2;  --dn-dk:#b91c1c;
-  --neu:#1a56db; --neu-bg:#eff6ff; --neu-bdr:#bfdbfe;
+  /* GBP accent — Union Jack navy */
+  --gbp:#012169; --gbp-bg:#eef2ff; --gbp-bdr:#c7d2fe;
 }
 html,body{
   width:100%;height:100%;
@@ -38,50 +39,42 @@ html,body{
     0 14px 36px rgba(15,23,42,.05);
 }
 
-/* top accent stripe — colour driven by direction */
+/* top accent stripe — colour follows direction */
 #stripe{
-  height:3px;
-  width:100%;
-  background:var(--neu);
+  height:3px;width:100%;
+  background:var(--gbp);
   transition:background .25s ease;
 }
 
-/* ── BODY — single tight padding ── */
+/* ── BODY ── */
 .body{
   padding:10px 13px 11px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+  display:flex;flex-direction:column;gap:8px;
 }
 
 /* ── ROW 1: flag badge left | delta chip right ── */
 .top-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:8px;
 }
 
 /* flag badge */
 .flag-badge{
   display:inline-flex;align-items:center;gap:5px;
-  background:var(--neu-bg);
-  border:0.5px solid var(--neu-bdr);
+  background:var(--gbp-bg);
+  border:0.5px solid var(--gbp-bdr);
   border-radius:6px;
   padding:3px 8px 3px 5px;
   flex-shrink:0;
 }
 .flag-icon{
   width:18px;height:12px;
-  border-radius:2px;
-  overflow:hidden;
-  flex-shrink:0;
-  display:block;
+  border-radius:2px;overflow:hidden;
+  flex-shrink:0;display:block;
 }
 .flag-lbl{
   font-size:9px;font-weight:700;
-  letter-spacing:.06em;
-  color:var(--neu);
+  letter-spacing:.06em;color:var(--gbp);
 }
 
 /* delta chip */
@@ -92,19 +85,15 @@ html,body{
   white-space:nowrap;flex-shrink:0;
   font-variant-numeric:tabular-nums;
   transition:background .25s,color .25s;
-  background:var(--neu-bg);color:var(--neu);
+  background:var(--gbp-bg);color:var(--gbp);
 }
 
 /* ── ROW 2: hero number left | "vs yesterday" right ── */
 .hero-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:6px;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:6px;
 }
-.hero-left{
-  display:flex;align-items:baseline;gap:4px;
-}
+.hero-left{display:flex;align-items:baseline;gap:4px;}
 #hnum{
   font-size:30px;font-weight:700;color:var(--t1);
   letter-spacing:-0.03em;line-height:1;
@@ -126,41 +115,27 @@ html,body{
     <div id="stripe"></div>
     <div class="body">
 
-      <!-- Row 1: flag + delta chip -->
+      <!-- Row 1: UK flag + delta chip -->
       <div class="top-row">
         <div class="flag-badge">
-          <!-- US Flag inline SVG -->
+          <!-- UK Union Jack SVG -->
           <svg class="flag-icon" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg">
-            <rect width="18" height="12" fill="#B22234"/>
-            <rect y="0.92"  width="18" height="0.92" fill="#fff"/>
-            <rect y="1.85"  width="18" height="0.92" fill="#B22234"/>
-            <rect y="2.77"  width="18" height="0.92" fill="#fff"/>
-            <rect y="3.69"  width="18" height="0.92" fill="#B22234"/>
-            <rect y="4.62"  width="18" height="0.92" fill="#fff"/>
-            <rect y="5.54"  width="18" height="0.92" fill="#B22234"/>
-            <rect y="6.46"  width="18" height="0.92" fill="#fff"/>
-            <rect y="7.38"  width="18" height="0.92" fill="#B22234"/>
-            <rect y="8.31"  width="18" height="0.92" fill="#fff"/>
-            <rect y="9.23"  width="18" height="0.92" fill="#B22234"/>
-            <rect y="10.15" width="18" height="0.92" fill="#fff"/>
-            <rect width="7.2" height="6.46" fill="#3C3B6E"/>
-            <g fill="#fff">
-              <circle cx="1.2" cy="1.08" r="0.42"/><circle cx="2.4" cy="1.08" r="0.42"/>
-              <circle cx="3.6" cy="1.08" r="0.42"/><circle cx="4.8" cy="1.08" r="0.42"/>
-              <circle cx="6.0" cy="1.08" r="0.42"/>
-              <circle cx="1.2" cy="2.15" r="0.42"/><circle cx="2.4" cy="2.15" r="0.42"/>
-              <circle cx="3.6" cy="2.15" r="0.42"/><circle cx="4.8" cy="2.15" r="0.42"/>
-              <circle cx="6.0" cy="2.15" r="0.42"/>
-              <circle cx="1.8" cy="3.23" r="0.42"/><circle cx="3.0" cy="3.23" r="0.42"/>
-              <circle cx="4.2" cy="3.23" r="0.42"/><circle cx="5.4" cy="3.23" r="0.42"/>
-              <circle cx="1.2" cy="4.31" r="0.42"/><circle cx="2.4" cy="4.31" r="0.42"/>
-              <circle cx="3.6" cy="4.31" r="0.42"/><circle cx="4.8" cy="4.31" r="0.42"/>
-              <circle cx="6.0" cy="4.31" r="0.42"/>
-              <circle cx="1.8" cy="5.38" r="0.42"/><circle cx="3.0" cy="5.38" r="0.42"/>
-              <circle cx="4.2" cy="5.38" r="0.42"/><circle cx="5.4" cy="5.38" r="0.42"/>
-            </g>
+            <!-- navy background -->
+            <rect width="18" height="12" fill="#012169"/>
+            <!-- white diagonal cross (X) -->
+            <line x1="0" y1="0"  x2="18" y2="12" stroke="#fff" stroke-width="2.4"/>
+            <line x1="18" y1="0" x2="0"  y2="12" stroke="#fff" stroke-width="2.4"/>
+            <!-- red diagonal cross (X) thinner -->
+            <line x1="0" y1="0"  x2="18" y2="12" stroke="#C8102E" stroke-width="1.2"/>
+            <line x1="18" y1="0" x2="0"  y2="12" stroke="#C8102E" stroke-width="1.2"/>
+            <!-- white vertical + horizontal cross -->
+            <rect x="7.5" y="0" width="3" height="12" fill="#fff"/>
+            <rect x="0" y="4.5" width="18" height="3" fill="#fff"/>
+            <!-- red vertical + horizontal cross -->
+            <rect x="8" y="0" width="2" height="12" fill="#C8102E"/>
+            <rect x="0" y="5" width="18" height="2" fill="#C8102E"/>
           </svg>
-          <span class="flag-lbl">USD</span>
+          <span class="flag-lbl">GBP</span>
         </div>
 
         <div id="dchip">
@@ -188,11 +163,10 @@ html,body{
 
   var $ = function(id){ return document.getElementById(id); };
 
-  /* ── Mn helpers (divide by 1e6) ── */
+  /* ── Mn helpers — identical to USD card ── */
   function toMn(n){
     if(n===null||isNaN(n)) return '—';
     var abs=Math.abs(n), s=n<0?'-':'';
-    /* if already small treat as-is, else ÷1e6 */
     return s+(abs>=1e3?abs/1e6:abs).toFixed(2);
   }
   function signMn(n){
@@ -202,7 +176,6 @@ html,body{
   }
   function pctOf(d,a){
     if(!a||!d||a===0) return null;
-    /* convert both to Mn then compute */
     var aMn=Math.abs(a)>=1e3?a/1e6:a;
     var dMn=Math.abs(d)>=1e3?d/1e6:d;
     var prev=aMn-dMn;
@@ -210,7 +183,7 @@ html,body{
     return (dMn/Math.abs(prev))*100;
   }
 
-  /* ── count-up animation (Mn) ── */
+  /* ── count-up animation — identical to USD card ── */
   function countUp(target){
     var el=$('hnum');
     var abs=Math.abs(target);
@@ -228,31 +201,26 @@ html,body{
     },duration/steps);
   }
 
-  /* ── theme — stripe + chip both follow direction ── */
+  /* ── theme — stripe + chip follow direction ── */
   function applyTheme(dir){
     var T={
       up:  {
         stripe:'#16a34a',
-        chipBg:'#dcfce7', chipClr:'#15803d',
-        flagBg:'#eff6ff', flagBdr:'#bfdbfe', flagClr:'#1a56db',
+        chipBg:'#dcfce7',chipClr:'#15803d',
         svg:'<polyline points="1,8 4.5,1 8,8" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
       },
       down:{
         stripe:'#dc2626',
-        chipBg:'#fee2e2', chipClr:'#b91c1c',
-        flagBg:'#eff6ff', flagBdr:'#bfdbfe', flagClr:'#1a56db',
+        chipBg:'#fee2e2',chipClr:'#b91c1c',
         svg:'<polyline points="1,1 4.5,8 8,1" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
       },
       neu: {
-        stripe:'#1a56db',
-        chipBg:'#eff6ff', chipClr:'#1a56db',
-        flagBg:'#eff6ff', flagBdr:'#bfdbfe', flagClr:'#1a56db',
-        svg:'<line x1="1" y1="4.5" x2="8" y2="4.5" stroke="#1a56db" stroke-width="1.8" stroke-linecap="round"/>'
+        stripe:'#012169',
+        chipBg:'#eef2ff',chipClr:'#012169',
+        svg:'<line x1="1" y1="4.5" x2="8" y2="4.5" stroke="#012169" stroke-width="1.8" stroke-linecap="round"/>'
       }
     }[dir]||{};
-
     $('stripe').style.background = T.stripe;
-
     var chip=$('dchip');
     chip.style.background = T.chipBg;
     chip.style.color      = T.chipClr;
@@ -282,7 +250,7 @@ html,body{
     return map;
   }
 
-  /* ── render ── */
+  /* ── render — card always visible, no show/hide ── */
   function render(data, enc){
     if(!enc.actual||!data.length) return;
 
@@ -296,17 +264,13 @@ html,body{
 
     var actualN=num('actual');
     var deltaN =num('delta');
-
     if(actualN===null) return;
 
-    /* hero count-up in Mn */
     countUp(actualN);
 
-    /* direction */
     var dir=deltaN===null?'neu':deltaN>0?'up':deltaN<0?'down':'neu';
     applyTheme(dir);
 
-    /* delta chip */
     if(deltaN!==null){
       var sb  = signMn(deltaN);
       var pct = pctOf(deltaN,actualN);
